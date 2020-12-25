@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block head_title %}
+this is amazing!!!!
+{% endblock head_title%}
+
+
+{% block content %}
+
+
+<div id='tweetme-2'></div>
+
+
+
+<div class='row text-center d-none'>
+    <div class='col'>
+        <h1>Welcome to Tweetme 2</h1>
+    </div>
+</div>
+
+<div class='row d-none' id='tweets'>
+    Loading...
+</div>
+
+<script>
+function loadTweets(tweetsElement) {
+    const xhr = new XMLHttpRequest()
+    const method = 'GET' // "POST"
+    const url = "/tweets"
+    const responseType = "json"
+    xhr.responseType = responseType
+    xhr.open(method, url)
+    xhr.onload = function() {
+        const serverResponse = xhr.response
+        const listedItems = serverResponse // array
+        var finalTweetStr = ""
+        var i;
+        for (i=0;i<listedItems.length; i++) {
+            var tweetObj = listedItems[i]
+            var currentItem = formatTweetElement(tweetObj)
+            finalTweetStr += currentItem
+        }
+        tweetsElement.innerHTML = finalTweetStr
+    }
+    xhr.send()
+}
+
+</script>
+{% endblock content %}
