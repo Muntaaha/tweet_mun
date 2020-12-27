@@ -49,10 +49,13 @@ this is amazing!!!!
         xhr.setRequestHeader("HTTP_X_REQUESTED_WITH","XMLHttpRequest")
         xhr.setRequestHeader("X-Requested-With","XMLHttpRequest")
         xhr.onload = function() {
-            const serverResponse = xhr.response
-            console.log(serverResponse)
-            const tweetsEl = document.getElementById("tweets")
-            loadTweets(tweetsEl)
+            if(status === 201){
+            const newTweetJson = xhr.response
+            // const newTweetJson = JSON.parse(newTweet)
+            console.log(newTweetJson.likes)
+            const newTweetElement = formatTweetElement(newTweetJson)
+            console.log(newTweet)
+            }
         }
     xhr.send(myFormData)
     document.getElementById("tweet-create-form").reset()
@@ -61,7 +64,7 @@ this is amazing!!!!
 
     tweetCreateFormEl.addEventListener("submit",handleTweetCreateFormSubmission)
 
-    const tweetsEl = document.getElementById("tweets")
+    const tweetContainerElement = document.getElementById("tweets")
 
     function loadTweets(tweetsElement){
         const xhr = new XMLHttpRequest()
@@ -85,7 +88,7 @@ this is amazing!!!!
         }
         xhr.send()
     }
-    loadTweets(tweetsEl)
+    loadTweets(tweetContainerElement)
 
     function likeButton(tweet){
         return "<button class='btn btn-primary' onclick=handleLiked("+tweet.id+","+tweet.likes+")>"+tweet.likes+" Likes</button>"
