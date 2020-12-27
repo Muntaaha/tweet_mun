@@ -30,12 +30,61 @@ this is amazing!!!!
 </div>
 
 <div id='tweets'>
-   Replace Me
+    Loading...
 </div>
 
 <script>
-    const tweetsElement = document.getElementById("tweets") 
-    tweetsElement.innerHTML = "Loading..."
+
+    function handleTweetCreateFormSubmission(event){
+        event.preventDefault()
+        const myForm = event.target
+        const myFormData = new FormData(myForm)
+        for(var myItem of myFormData.entries()){
+            console.log(myItem)
+        }
+        const url = myForm.getAttribute("action")
+        const method = myForm.getAttribute("method")
+        const xhr = new XMLHttpRequest()
+        xhr.open(method, url)
+        xhr.onload = function() {
+            const serverResponse = xhr.response
+            console.log(serverResponse)
+            const tweetsEl = document.getElementById("tweets")
+            loadTweets(tweetsEl)
+        }
+    xhr.send(myFormData)
+    document.getElementById("tweet-create-form").reset()
+    }
+    const tweetCreateFormEl = document.getElementById("tweet-create-form")
+
+    tweetCreateFormEl.addEventListener("submit",handleTweetCreateFormSubmission)
+
+    const tweetsEl = document.getElementById("tweets")
+
+    function loadTweets(tweetsElement){
+        const xhr = new XMLHttpRequest()
+        const method = 'GET' // "POST"
+        const url = "/tweets"
+        const responseType = "json"
+        xhr.responseType = responseType
+        xhr.open(method, url)
+        xhr.onload = function() {
+            const serverResponse = xhr.response
+            const listedItems = serverResponse.response // array
+            var finalTweetStr = ""
+            var i;
+            for (i=0;i<listedItems.length; i++) {
+                console.log(listedItems[i])
+                var tweetObj = listedItems[i]
+                var currentItem = formatTweetElement(tweetObj)
+                finalTweetStr += currentItem
+            }
+            tweetsElement.innerHTML = finalTweetStr
+        }
+        xhr.send()
+    }
+    loadTweets(tweetsEl)
+
     function likeButton(tweet){
         return "<button class='btn btn-primary' onclick=handleLiked("+tweet.id+","+tweet.likes+")>"+tweet.likes+" Likes</button>"
     }
@@ -43,29 +92,10 @@ this is amazing!!!!
         console.log(tweet_id, currentCount)
     }
     function formatTweetElement(tweet){
-        var formatedTweet = "<div id='tweet-"+tweet.id+"'><b>"+tweet.id+"</b>"+" "+tweet.content +"</br>"
-        formatedTweet += likeButton(tweet) 
+        var formatedTweet = "<div class='col-12 col-md-10 mx-auto border-bottom py-3 mb-4 tweet' id='tweet-"+tweet.id+"'><p>"+" "+tweet.content +"</p><div class='btn-group'> "+likeButton(tweet)+"</div></div>"
             return formatedTweet
     }
-    const xhr = new XMLHttpRequest()
-    const method = 'GET' // "POST"
-    const url = "/tweets"
-    const responseType = "json"
-    xhr.responseType = responseType
-    xhr.open(method, url)
-    xhr.onload = function() {
-        const serverResponse = xhr.response
-        const listedItems = serverResponse.response // array
-        var finalTweetStr = ""
-        var i;
-        for (i=0;i<listedItems.length; i++) {
-            console.log(listedItems[i])
-            var tweetObj = listedItems[i]
-            var currentItem = formatTweetElement(tweetObj)
-            finalTweetStr += currentItem
-        }
-        tweetsElement.innerHTML = finalTweetStr
-    }
-    xhr.send()
+    
+    
 </script>
 {% endblock content %}
