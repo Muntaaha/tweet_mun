@@ -1,3 +1,4 @@
+import random
 from django.conf import settings
 from django.http import HttpResponse, Http404, JsonResponse
 from django.shortcuts import render, redirect
@@ -28,7 +29,7 @@ def tweet_create_view(request, *args, **kwargs):
 
 def tweet_list_view(request,*args,**kwargs):
     qs = Tweets.objects.all()
-    tweet_list = [{"id":x.id, "content":x.content} for x in qs]
+    tweet_list = [{"id":x.id, "content":x.content, "likes":random.randint(10,500)} for x in qs]
     data = {
         "isUser": False,
         "response": tweet_list 
