@@ -36,7 +36,7 @@ this is amazing!!!!
 
 <script>
     function handleTweetFormError(msg, display){
-        var myErrorDiv = document.getElementById("tweet-create-form-error")
+        var myErrorDiv = document.getElementById("create-tweet-form-error")
         if (display === true) {
             // show error
             myErrorDiv.setAttribute("class", "d-block alert alert-danger")
@@ -65,6 +65,7 @@ this is amazing!!!!
         xhr.setRequestHeader("X-Requested-With","XMLHttpRequest")
         xhr.onload = function() {
             if(xhr.status === 201){
+                handleTweetFormError("", false)
                 const newTweetJson = xhr.response
                 console.log('Muntaaha')
                 // const newTweetJson = JSON.parse(newTweet)
@@ -72,7 +73,8 @@ this is amazing!!!!
                 const ogHtml = tweetContainerElement.innerHTML
                 tweetContainerElement.innerHTML = newTweetElement + ogHtml
                 myForm.reset()
-            }else if(xhr.status === 400){
+            }
+            else if(xhr.status === 400){
                 const errorJson = xhr.response 
                 console.log(errorJson)
                 const contentError = errorJson.content 
@@ -83,7 +85,12 @@ this is amazing!!!!
                 else{
                     console.log("Some other error")
                 }
-            }else if(xhr.status === 500){
+            }
+            else if(xhr.status === 501){
+                alert("Yoy Must Login")
+                window.location.href = "/login"
+            }
+            else if(xhr.status === 500){
                 console.log("There is a server error. Please try again later")
             }
             else{
