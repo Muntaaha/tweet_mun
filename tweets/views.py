@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect
 from django.utils.http import is_safe_url
 from .models import Tweets
 from .forms import TweetForm
+from .serializers import TweetSerializer
 
 # Create your views here.
 
@@ -14,6 +15,12 @@ def home_view(request, *args, **kwargs):
     return render(request, 'pages/home.html', context={}, status=200)
 
 def tweet_create_view(request, *args, **kwargs):
+    data = request.POST or None
+    serializer = TweetSerializer(data=data)
+    if serializer.is_valid():
+        serializer.save()
+    return JsonResponse({}, status = 400)
+def tweet_create_view_pure_django(request, *args, **kwargs):
     print("ajax", request.is_ajax())
     user = request.user
     if not request.user.is_authenticated:
