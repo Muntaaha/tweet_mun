@@ -18,7 +18,8 @@ def tweet_create_view(request, *args, **kwargs):
     data = request.POST or None
     serializer = TweetSerializer(data=data)
     if serializer.is_valid():
-        serializer.save()
+        serializer.save(user=request.user)
+        return JsonResponse(serializer.data, status=201)
     return JsonResponse({}, status = 400)
 def tweet_create_view_pure_django(request, *args, **kwargs):
     print("ajax", request.is_ajax())
