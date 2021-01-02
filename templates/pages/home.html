@@ -86,12 +86,15 @@ this is amazing!!!!
                     console.log("Some other error")
                 }
             }
-            else if(xhr.status === 501){
+            else if(xhr.status === 401){
                 alert("Yoy Must Login")
                 window.location.href = "/login"
             }
             else if(xhr.status === 500){
                 console.log("There is a server error. Please try again later")
+            }
+            else if(xhr.status === 403){
+                alert("You must login")
             }
             else{
                 console.log("An Error occured")
